@@ -14,3 +14,11 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+
+![alt signup screen](image.png)
+![alt login screen](image-1.png)
+![alt reset pasword screen](image-2.png)
+![home](image-3.png)
+<video controls src="20251107-0918-18.8358299.mp4" title="Title"></video>
