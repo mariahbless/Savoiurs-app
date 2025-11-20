@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
  void initState() {
  super.initState();
  // Move to Onboarding after 3 seconds
- Timer(Duration(seconds: 3), () {
+ Timer(Duration(seconds: 6), () {
  Navigator.pushReplacement(
  context,
  MaterialPageRoute(builder: (context) => OnboardingScreen()),
@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
  @override
  Widget build(BuildContext context) {
  return Scaffold(
- backgroundColor: Colors.deepPurple,
+ backgroundColor: Colors.white,
  body: Center(
  child: Column(
  mainAxisAlignment: MainAxisAlignment.center,

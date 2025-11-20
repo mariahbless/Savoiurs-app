@@ -55,7 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
  alignment: Alignment.center,
  child: Text(
  'Get Started',
- style: TextStyle(color: Colors.white, fontSize: 20),
+ style: TextStyle(color: const Color.fromARGB(255, 40, 2, 2), fontSize: 20),
  ),
  ),
  )
@@ -104,7 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
  Text(
  description,
  textAlign: TextAlign.center,
- style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+ style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 33, 1, 1)),
  ),
  ],
  );
