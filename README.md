@@ -17,11 +17,11 @@ samples, guidance on mobile development, and a full API reference.
 
 
 
-<!-- ![alt signup screen](image.png)
-![alt login screen](image-1.png)
-![alt reset pasword screen](image-2.png)
-![home](image-3.png)
-<video controls src="20251107-0918-18.8358299.mp4" title="Title"></video> -->
 ![Registration form](image-4.png)
 ![login form](image-5.png)
 ![forgot password](image-6.png)
+![home screen](image-7.png)
+![home screen contn](image-8.png)
+![profile card](image-9.png)
+![splash screen](image-10.png)
+![onboarding screen](image-11.png)
