@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
  void initState() {
  super.initState();
  // Move to Onboarding after 3 seconds
- Timer(Duration(seconds: 6), () {
+ Timer(Duration(seconds: 3), () {
  Navigator.pushReplacement(
  context,
  MaterialPageRoute(builder: (context) => OnboardingScreen()),
@@ -39,8 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
  fontWeight: FontWeight.bold,
  ),
  ),
- SizedBox(height: 40),
- CircularProgressIndicator(color: Colors.white),
+ SizedBox(height: 60),
+ CircularProgressIndicator(color: const Color.fromARGB(255, 43, 166, 242)),
  ],
  ),
  ),
