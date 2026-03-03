@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'password_reset.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'home_screen.dart';
+
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -24,6 +28,8 @@ class _SignInScreenState extends State<SignInScreen> {
   bool _showPassword = false;
   bool _showConfirmPassword = false;
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -35,15 +41,69 @@ class _SignInScreenState extends State<SignInScreen> {
     super.dispose();
   }
 
-  void _submitForm() {
+  // 🔹 Submit form and call Laravel API
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      print("Form submitted!");
-      print("First Name: ${_firstNameController.text}");
-      print("Last Name: ${_lastNameController.text}");
-      print("Email: ${_emailController.text}");
-      print("Password: ${_passwordController.text}");
-      print("Location: $_selectedLocation");
-      print("Phone: ${_phoneController.text}");
+
+      print("Email being sent: ${_emailController.text.trim()}");
+
+      final url = Uri.parse('http://localhost:8000/api/register');
+
+      try {
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: jsonEncode({
+      'first_name': _firstNameController.text,
+      'last_name': _lastNameController.text,
+      'email': _emailController.text.trim(),
+      'password': _passwordController.text,
+      'password_confirmation': _confirmPasswordController.text,
+      'phone': _phoneController.text,
+      'location': _selectedLocation,
+    }),
+  );
+
+  // ✅ PRINT AFTER response is created
+  print('Status Code: ${response.statusCode}');
+  print('Response Body: ${response.body}');
+
+        if (response.statusCode == 201) {
+  final data = jsonDecode(response.body);
+  print('✅ User registered successfully!');
+  print('Token: ${data['token']}');
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Registration successful! Redirecting...'),
+      backgroundColor: Colors.green,
+    ),
+  );
+
+  // ✅ Navigate to Home Screen
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const HomeScreen(),
+    ),
+  );
+}
+        else if (response.statusCode == 422) {
+          final data = jsonDecode(response.body);
+          final errors = data['errors'] as Map<String, dynamic>;
+          errors.forEach((key, value) {
+            print('Error in $key: ${value[0]}');
+          });
+        } else {
+          print('Error: ${response.statusCode}');
+          print(response.body);
+        }
+      } catch (e) {
+        print('Exception: $e');
+      }
     }
   }
 
@@ -81,7 +141,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // First Name
                     _buildInputField(
                       controller: _firstNameController,
                       label: "First Name",
@@ -90,7 +149,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Last Name
                     _buildInputField(
                       controller: _lastNameController,
                       label: "Last Name",
@@ -98,7 +156,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Email
                     _buildInputField(
                       controller: _emailController,
                       label: "Email",
@@ -114,7 +171,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Password
                     _buildInputField(
                       controller: _passwordController,
                       label: "Password",
@@ -138,7 +194,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Confirm Password
                     _buildInputField(
                       controller: _confirmPasswordController,
                       label: "Confirm Password",
@@ -162,7 +217,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Location
                     DropdownButtonFormField<String>(
                       initialValue: _selectedLocation,
                       decoration: InputDecoration(
@@ -189,7 +243,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Phone
                     _buildInputField(
                       controller: _phoneController,
                       label: "Phone Number",
@@ -199,7 +252,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 25),
 
-                    // 🔹 Submit Button
                     ElevatedButton(
                       onPressed: _submitForm,
                       style: ElevatedButton.styleFrom(
@@ -217,7 +269,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // 🔹 Login Link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -242,7 +293,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       ],
                     ),
 
-                    // 🔹 Forgot Password (Now last)
                     Align(
                       alignment: Alignment.center,
                       child: TextButton(
@@ -271,7 +321,6 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  // 🔹 Reusable input field
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,
@@ -301,7 +350,6 @@ class _SignInScreenState extends State<SignInScreen> {
 // import 'package:flutter/material.dart';
 // import 'login_screen.dart';
 // import 'password_reset.dart';
-
 
 // class SignInScreen extends StatefulWidget {
 //   const SignInScreen({super.key});
@@ -351,7 +399,7 @@ class _SignInScreenState extends State<SignInScreen> {
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       backgroundColor: Colors.blueGrey[50], // calm background
+//       backgroundColor: Colors.blueGrey[50],
 //       appBar: AppBar(
 //         title: const Text('Register'),
 //         backgroundColor: Colors.blueAccent.shade100,
@@ -361,7 +409,7 @@ class _SignInScreenState extends State<SignInScreen> {
 //         child: SingleChildScrollView(
 //           padding: const EdgeInsets.all(20.0),
 //           child: Card(
-//             color: Colors.blue.shade50, // calm card color
+//             color: Colors.blue.shade50,
 //             elevation: 5,
 //             shape: RoundedRectangleBorder(
 //               borderRadius: BorderRadius.circular(16),
@@ -500,7 +548,7 @@ class _SignInScreenState extends State<SignInScreen> {
 //                     ),
 //                     const SizedBox(height: 25),
 
-//                     // Button
+//                     // 🔹 Submit Button
 //                     ElevatedButton(
 //                       onPressed: _submitForm,
 //                       style: ElevatedButton.styleFrom(
@@ -516,6 +564,52 @@ class _SignInScreenState extends State<SignInScreen> {
 //                         style: TextStyle(fontSize: 18, color: Colors.white),
 //                       ),
 //                     ),
+//                     const SizedBox(height: 15),
+
+//                     // 🔹 Login Link
+//                     Row(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: [
+//                         const Text("Already have an account? "),
+//                         TextButton(
+//                           onPressed: () {
+//                             Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                 builder: (context) => const LoginScreen(),
+//                               ),
+//                             );
+//                           },
+//                           child: const Text(
+//                             "Login",
+//                             style: TextStyle(
+//                               color: Colors.blueAccent,
+//                               fontWeight: FontWeight.bold,
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+
+//                     // 🔹 Forgot Password (Now last)
+//                     Align(
+//                       alignment: Alignment.center,
+//                       child: TextButton(
+//                         onPressed: () {
+//                           Navigator.push(
+//                             context,
+//                             MaterialPageRoute(
+//                               builder: (context) =>
+//                                   const ResetPasswordScreen(),
+//                             ),
+//                           );
+//                         },
+//                         child: const Text(
+//                           "Forgot Password?",
+//                           style: TextStyle(color: Colors.blueAccent),
+//                         ),
+//                       ),
+//                     ),
 //                   ],
 //                 ),
 //               ),
@@ -526,7 +620,7 @@ class _SignInScreenState extends State<SignInScreen> {
 //     );
 //   }
 
-//   // 🔹 Reusable white input field widget
+//   // 🔹 Reusable input field
 //   Widget _buildInputField({
 //     required TextEditingController controller,
 //     required String label,
@@ -552,3 +646,4 @@ class _SignInScreenState extends State<SignInScreen> {
 //     );
 //   }
 // }
+

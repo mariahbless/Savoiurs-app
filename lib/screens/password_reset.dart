@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'new_password_screen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -11,22 +14,79 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
   }
 
-  void _resetPassword() {
+  // ✅ Updated to call Laravel API
+  Future<void> _resetPassword() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       final email = _emailController.text.trim();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password reset link sent to $email')),
-      );
+      try {
+        // 1. Send POST request to Laravel
+        final response = await http.post(
+          Uri.parse('http://127.0.0.1:8000/api/forgot-password'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode({
+            'email': email,
+          }),
+        );
 
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pop(context);
+        // 2. Decode the response
+        final data = jsonDecode(response.body);
+
+        if (response.statusCode == 200 && data['success'] == true) {
+          // 3. Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Reset link sent! Check your email.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // 4. Navigate to New Password Screen — pass email along
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewPasswordScreen(email: email),
+              ),
+            );
+          });
+
+        } else {
+          // Failed — show error
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(data['message'] ?? 'Something went wrong'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        // Network error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Connection error. Check your internet or server.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -61,7 +121,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 child: CircleAvatar(
                   radius: 100,
                   backgroundColor: Colors.white,
-                  backgroundImage: AssetImage('assets/onboard6.png'), // Replace with your logo
+                  backgroundImage: AssetImage('assets/onboard6.png'),
                 ),
               ),
 
@@ -89,7 +149,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                         const SizedBox(height: 10),
                         const Text(
-                          "Enter your registered email and we’ll send you a link to reset your password.",
+                          "Enter your registered email and we'll send you a link to reset your password.",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
@@ -120,22 +180,25 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                         const SizedBox(height: 25),
 
-                        // 🔹 Reset Button
-                        ElevatedButton(
-                          onPressed: _resetPassword,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 50, vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: const Text(
-                            'Send Reset Link',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        ),
+                        // 🔹 Reset Button — shows spinner when loading
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: _resetPassword,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 50, vertical: 15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Send Reset Link',
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                ),
+                              ),
                         const SizedBox(height: 15),
 
                         // 🔹 Back to Login
