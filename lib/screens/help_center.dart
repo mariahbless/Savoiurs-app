@@ -26,17 +26,17 @@ class HelpCenterScreen extends StatelessWidget {
 
             ListTile(
               leading: Icon(Icons.phone, color: Colors.green),
-              title: Text("+256 700 000000"),
+              title: Text("+256 783 519 023"),
             ),
 
             ListTile(
               leading: Icon(Icons.email, color: Colors.blue),
-              title: Text("support@savioursfinance.com"),
+              title: Text("saviours@gmail.com"),
             ),
 
             ListTile(
               leading: Icon(Icons.location_on, color: Colors.red),
-              title: Text("Kampala, Uganda"),
+              title: Text("Ntinda Complex - Kampala"),
             ),
           ],
         ),

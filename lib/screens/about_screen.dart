@@ -86,42 +86,6 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 25),
 
-            // ---------------- TEAM / LEADERSHIP ----------------
-            // const Text(
-            //   'Meet Our Team',
-            //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            // ),
-            // const SizedBox(height: 15),
-            // SizedBox(
-            //   height: 140,
-            //   child: ListView(
-            //     scrollDirection: Axis.horizontal,
-            //     children: [
-            //       TeamMemberCard(
-            //         name: 'Madam Joan',
-            //         role: 'CEO',
-            //         image: 'assets/onboard2.png',
-            //       ),
-            //       TeamMemberCard(
-            //         name: 'Mr Nichlas',
-            //         role: 'Loan Officer',
-            //         image: 'assets/onboard2.png',
-            //       ),
-            //       TeamMemberCard(
-            //         name: 'Mr Kenneth',
-            //         role: 'Loan Officer',
-            //         image: 'assets/onboard2.png',
-            //       ),
-            //       TeamMemberCard(
-            //         name: 'Mr Peter',
-            //         role: 'Finance Manager',
-            //         image: 'assets/onboard2.png',
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 25),
-
             // ---------------- CONTACT INFO ----------------
             const Text(
               'Contact Us',
@@ -129,7 +93,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Phone: +256 783 519 023\nEmail: saviours@gmail.com\nAddress: Plot 123, Kampala, Uganda',
+              'Phone: +256 783 519 023\nEmail: saviours@gmail.com\nAddress: Plot 123, Ntinda-Kampala',
               style: TextStyle(fontSize: 16, color: Colors.black87, height: 1.4),
             ),
             const SizedBox(height: 30),

@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
   bool _showPassword = false;
   bool _showConfirmPassword = false;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void dispose() {
