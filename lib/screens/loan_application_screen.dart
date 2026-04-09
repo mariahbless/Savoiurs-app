@@ -323,7 +323,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
 
                     // Gender Dropdown
                     DropdownButtonFormField<String>(
-                      value: _selectedGender,
+                      initialValue: _selectedGender,
                       decoration: InputDecoration(
                         labelText: 'Gender',
                         prefixIcon: const Icon(Icons.wc, color: Colors.blueAccent),
@@ -408,7 +408,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                     const SizedBox(height: 12),
 
                     DropdownButtonFormField<String>(
-                      value: _selectedLoanType,
+                      initialValue: _selectedLoanType,
                       decoration: InputDecoration(
                         labelText: 'Loan Type',
                         prefixIcon: const Icon(Icons.category, color: Colors.blueAccent),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:saviours_app/screens/loan_dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'password_reset.dart';
 import 'signin_screen.dart';
-import 'main_screen.dart';
+//import 'main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -72,12 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
 
           // 5. Navigate to Main Screen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainScreen(),
-            ),
-          );
+          Navigator.pop(context); // Close login screen
 
         } else {
           // Login failed — show error from server

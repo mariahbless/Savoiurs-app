@@ -59,6 +59,42 @@ class TermsAndConditionsScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 15),
                     ),
                     SizedBox(height: 10),
+                    Text(
+                      '3. Loan Cancellation:',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '3.1 Where the loan is cancelled at any stage of processing before disbursement of the funds, the Borrower shall be obligated to pay any loan originatio costs incurred.',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '3.2 Cancellation of the loan before disbursement of the funds should be communicated in writing by an oﬃcial letter.',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Text(
+                      '3.3 If the loan is cancelled after receipt of the funds, the Borrower shall reimburse the disbursed amount plus the loan origination costs within 48 hours of receipt of the said funds be communicated in writing through an oﬃcial letter accompanied with the proof of refund. Failure to which Clause 6 of the Terms and Conditions shall take effect.',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    
+                    SizedBox(height: 10),
+                    Text(
+                      '4. Insurance',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '4.1 The Borrower undertakes to insure the collateral for the entire loan period.',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Text(
+                      '4.2 The Borrower undertakes to endorse S.F.I.LTD as the principal beneﬁciary of any dues arising from an insurance claim relating to the motor vehicle used as a security.',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Text(
+                      '4.3 The Borrower shall not use the motor vehicle nor permit it to be used for any purpose not permitted by the terms and conditions of the Insurance Policy nor permit to be done any act or thing by reason of which such Insurance Policy may be invalid.',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    SizedBox(height: 10),
                   ],
                 ),
               ),
