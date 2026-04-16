@@ -145,10 +145,12 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
                 ),
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Enter an amount';
-                  if (double.tryParse(v) == null)
+                  if (double.tryParse(v) == null) {
                     return 'Enter a valid amount';
-                  if (double.parse(v) <= 0)
+                  }
+                  if (double.parse(v) <= 0) {
                     return 'Amount must be greater than 0';
+                  }
                   return null;
                 },
               ),

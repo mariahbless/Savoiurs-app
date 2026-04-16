@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
+//import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,17 +28,22 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   final TextEditingController _nextOfKinContactController = TextEditingController();
   final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _monthlyIncomeController = TextEditingController();
-  final TextEditingController _collateralController = TextEditingController();
   final TextEditingController _currentAddressController = TextEditingController();
 
   String? _selectedLoanType;
   String? _selectedGender;
+  String? _selectedCollateral;  // ← collateral dropdown value
   bool _isLoading = false;
 
-  // Image variables - supports both web and mobile
-  File? _idImage;           // used on mobile
-  Uint8List? _idImageBytes; // used on web
-  String? _idImageBase64;
+ 
+  File? _idFrontImage;
+  Uint8List? _idFrontImageBytes;
+  String? _idFrontImageBase64;
+
+ 
+  File? _idBackImage;
+  Uint8List? _idBackImageBytes;
+  String? _idBackImageBase64;
 
   final List<String> _loanTypes = [
     'School Fees Loan',
@@ -48,6 +53,13 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   ];
 
   final List<String> _genders = ['Male', 'Female', 'Other'];
+
+  // ← Collateral restricted to three types
+  final List<String> _collateralTypes = [
+    'Land',
+    'Vehicle Logbook',
+    'Business Assets',
+  ];
 
   @override
   void dispose() {
@@ -61,30 +73,41 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     _nextOfKinContactController.dispose();
     _occupationController.dispose();
     _monthlyIncomeController.dispose();
-    _collateralController.dispose();
     _currentAddressController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickIdImage() async {
+  
+  Future<void> _pickIdImage({required bool isFront}) async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
     if (picked != null) {
       final bytes = await picked.readAsBytes();
       setState(() {
-        _idImage = kIsWeb ? null : File(picked.path); // File only works on mobile
-        _idImageBytes = bytes;                         // bytes works on both
-        _idImageBase64 = base64Encode(bytes);
+        if (isFront) {
+          _idFrontImage = kIsWeb ? null : File(picked.path);
+          _idFrontImageBytes = bytes;
+          _idFrontImageBase64 = base64Encode(bytes);
+        } else {
+          _idBackImage = kIsWeb ? null : File(picked.path);
+          _idBackImageBytes = bytes;
+          _idBackImageBase64 = base64Encode(bytes);
+        }
       });
     }
   }
 
   Future<void> _submitLoan() async {
     if (_formKey.currentState!.validate()) {
-      if (_idImageBase64 == null) {
+      // Require both front and back ID photos
+      if (_idFrontImageBase64 == null || _idBackImageBase64 == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please upload your National ID'),
+          SnackBar(
+            content: Text(
+              _idFrontImageBase64 == null
+                  ? 'Please upload the FRONT of your National ID'
+                  : 'Please upload the BACK of your National ID',
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -131,9 +154,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
             'next_of_kin_contact': _nextOfKinContactController.text.trim(),
             'occupation': _occupationController.text.trim(),
             'monthly_income': double.parse(_monthlyIncomeController.text.trim()),
-            'collateral': _collateralController.text.trim(),
+            'collateral': _selectedCollateral,
             'current_address': _currentAddressController.text.trim(),
-            'id_image': _idImageBase64,
+            'id_image_front': _idFrontImageBase64,
+            'id_image_back': _idBackImageBase64,
           }),
         );
 
@@ -225,24 +249,130 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     );
   }
 
-  // ─── ID image preview (works on web and mobile) ────────────────────────────
-  Widget _buildImagePreview() {
-    if (_idImageBytes != null) {
-      // Works on BOTH web and mobile
-      return Image.memory(
-        _idImageBytes!,
-        width: double.infinity,
-        height: 180,
-        fit: BoxFit.cover,
-      );
-    }
-    return const SizedBox.shrink();
+  /// Builds a single ID upload box (front or back).
+  Widget _buildIdUploadBox({
+    required String label,
+    required bool isFront,
+    required Uint8List? imageBytes,
+  }) {
+    final bool hasImage = imageBytes != null;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => _pickIdImage(isFront: isFront),
+        child: Container(
+          height: 150,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: hasImage ? Colors.green : Colors.blueAccent,
+              width: 1.5,
+            ),
+          ),
+          child: hasImage
+              ? Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.memory(
+                        imageBytes,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    // Green tick badge
+                    Positioned(
+                      top: 6,
+                      left: 6,
+                      child: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.green.shade600,
+                        child: const Icon(Icons.check, size: 14, color: Colors.white),
+                      ),
+                    ),
+                    // Remove button
+                    Positioned(
+                      top: 6,
+                      right: 6,
+                      child: GestureDetector(
+                        onTap: () => setState(() {
+                          if (isFront) {
+                            _idFrontImage = null;
+                            _idFrontImageBytes = null;
+                            _idFrontImageBase64 = null;
+                          } else {
+                            _idBackImage = null;
+                            _idBackImageBytes = null;
+                            _idBackImageBase64 = null;
+                          }
+                        }),
+                        child: const CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Colors.red,
+                          child: Icon(Icons.close, size: 14, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    // Label at bottom
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade600.withOpacity(0.85),
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(9),
+                            bottomRight: Radius.circular(9),
+                          ),
+                        ),
+                        child: Text(
+                          label,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      isFront ? Icons.credit_card : Icons.flip_camera_android,
+                      size: 30,
+                      color: Colors.blueAccent,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Tap to upload',
+                      style: TextStyle(color: Colors.grey, fontSize: 11),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool hasImage = _idImageBytes != null;
-
     return Scaffold(
       backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
@@ -407,6 +537,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                     ),
                     const SizedBox(height: 12),
 
+                    // Loan Type Dropdown
                     DropdownButtonFormField<String>(
                       initialValue: _selectedLoanType,
                       decoration: InputDecoration(
@@ -424,85 +555,86 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    _buildTextField(
-                      controller: _collateralController,
-                      label: 'Collateral',
-                      icon: Icons.security_outlined,
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Status (read only)
-                    TextFormField(
-                      initialValue: 'Pending',
-                      readOnly: true,
+                    // ← Collateral Dropdown (restricted to 3 types)
+                    DropdownButtonFormField<String>(
+                      initialValue: _selectedCollateral,
                       decoration: InputDecoration(
-                        labelText: 'Status',
-                        prefixIcon: const Icon(Icons.info_outline, color: Colors.orange),
+                        labelText: 'Collateral',
+                        prefixIcon: const Icon(Icons.security_outlined, color: Colors.blueAccent),
                         filled: true,
-                        fillColor: Colors.grey.shade200,
+                        fillColor: Colors.white,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       ),
+                      items: _collateralTypes
+                          .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                          .toList(),
+                      onChanged: (value) => setState(() => _selectedCollateral = value),
+                      validator: (value) => value == null ? 'Please select a collateral type' : null,
                     ),
 
                     // ── ID Upload ─────────────────────────────────────────────
                     _sectionHeader('Identity Verification', Icons.badge_outlined),
 
-                    GestureDetector(
-                      onTap: _pickIdImage,
-                      child: Container(
-                        width: double.infinity,
-                        height: hasImage ? 180 : 100,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: hasImage ? Colors.green : Colors.blueAccent,
-                            width: 1.5,
-                          ),
-                        ),
-                        child: hasImage
-                            ? Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: _buildImagePreview(), // ← works on web & mobile
-                                  ),
-                                  Positioned(
-                                    top: 8,
-                                    right: 8,
-                                    child: GestureDetector(
-                                      onTap: () => setState(() {
-                                        _idImage = null;
-                                        _idImageBytes = null;
-                                        _idImageBase64 = null;
-                                      }),
-                                      child: const CircleAvatar(
-                                        radius: 14,
-                                        backgroundColor: Colors.red,
-                                        child: Icon(Icons.close, size: 16, color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.upload_file, size: 32, color: Colors.blueAccent),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Tap to upload National ID',
-                                    style: TextStyle(color: Colors.blueAccent, fontSize: 14),
-                                  ),
-                                  Text(
-                                    '(Photo from gallery)',
-                                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                                  ),
-                                ],
-                              ),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Upload both sides of your National ID',
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
                       ),
                     ),
+                    const SizedBox(height: 10),
+
+                    // Front & Back side by side
+                    Row(
+                      children: [
+                        _buildIdUploadBox(
+                          label: 'Front Side',
+                          isFront: true,
+                          imageBytes: _idFrontImageBytes,
+                        ),
+                        const SizedBox(width: 12),
+                        _buildIdUploadBox(
+                          label: 'Back Side',
+                          isFront: false,
+                          imageBytes: _idBackImageBytes,
+                        ),
+                      ],
+                    ),
+
+                    // Upload status indicators
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          _idFrontImageBytes != null ? Icons.check_circle : Icons.radio_button_unchecked,
+                          size: 16,
+                          color: _idFrontImageBytes != null ? Colors.green : Colors.grey,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Front uploaded',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _idFrontImageBytes != null ? Colors.green : Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Icon(
+                          _idBackImageBytes != null ? Icons.check_circle : Icons.radio_button_unchecked,
+                          size: 16,
+                          color: _idBackImageBytes != null ? Colors.green : Colors.grey,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Back uploaded',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _idBackImageBytes != null ? Colors.green : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+
                     const SizedBox(height: 30),
 
                     // ── Submit Button ─────────────────────────────────────────
@@ -600,7 +732,7 @@ class LoanSuccessScreen extends StatelessWidget {
                         const Divider(),
                         _buildSummaryRow('Amount', 'UGX $amount'),
                         const Divider(),
-                        _buildSummaryRow('Status', 'Pending'),
+                        _buildSummaryRow('Status', 'Pending Review'),
                       ],
                     ),
                   ),
@@ -639,4 +771,3 @@ class LoanSuccessScreen extends StatelessWidget {
     );
   }
 }
-

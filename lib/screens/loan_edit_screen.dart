@@ -165,10 +165,12 @@ class _LoanEditScreenState extends State<LoanEditScreen> {
                 keyboardType: TextInputType.number,
                 validator: (v) {
                   if (v == null || v.isEmpty) return 'Amount is required';
-                  if (double.tryParse(v) == null)
+                  if (double.tryParse(v) == null) {
                     return 'Enter a valid amount';
-                  if (double.parse(v) <= 0)
+                  }
+                  if (double.parse(v) <= 0) {
                     return 'Amount must be greater than 0';
+                  }
                   return null;
                 },
               ),
