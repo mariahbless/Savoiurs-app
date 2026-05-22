@@ -63,7 +63,7 @@ class LoanService {
     };
   }
 
-  // ─── MAKE REPAYMENT ───────────────────────────────────────────────────────
+  // MAKE REPAYMENT 
   static Future<Map<String, dynamic>> makeRepayment(
       int loanId, double amount, String paymentMethod) async {
     final headers = await _authHeaders();
@@ -85,7 +85,7 @@ class LoanService {
     };
   }
 
-  // ─── GET REPAYMENTS FOR A LOAN ────────────────────────────────────────────
+  //GET REPAYMENTS FOR A LOAN 
   static Future<List<dynamic>> getRepayments(int loanId) async {
     final headers = await _authHeaders();
     final response = await http.get(

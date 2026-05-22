@@ -1,441 +1,609 @@
 import 'package:flutter/material.dart';
 import 'terms_screen.dart';
 
-class LoanScreen extends StatelessWidget {
+class LoanScreen extends StatefulWidget {
   const LoanScreen({super.key});
+
+  @override
+  State<LoanScreen> createState() => _LoanScreenState();
+}
+
+class _LoanScreenState extends State<LoanScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animController;
+  late Animation<double> _fadeAnim;
+  late Animation<Offset> _slideAnim;
+  int _selectedProduct = -1;
+
+  final List<Map<String, dynamic>> loanProducts = [
+    {
+      "icon": Icons.person_rounded,
+      "title": "Personal Loan",
+      "limit": "Up to 50M",
+      "desc": "Cover personal expenses with ease",
+      "gradient": [Color(0xFF0057D9), Color(0xFF0A84FF)],
+    },
+    {
+      "icon": Icons.business_center_rounded,
+      "title": "Business Loan",
+      "limit": "Up to 50M",
+      "desc": "Fuel your business growth",
+      "gradient": [Color(0xFF00897B), Color(0xFF26C6DA)],
+    },
+    {
+      "icon": Icons.school_rounded,
+      "title": "School Fees Loan",
+      "limit": "Up to 30M",
+      "desc": "Invest in quality education",
+      "gradient": [Color(0xFFF57C00), Color(0xFFFFCA28)],
+    },
+    {
+      "icon": Icons.home_work_rounded,
+      "title": "Land Title Loan",
+      "limit": "Up to 50M",
+      "desc": "Leverage your property assets",
+      "gradient": [Color(0xFF6A1B9A), Color(0xFFAB47BC)],
+    },
+  ];
+
+  final List<Map<String, dynamic>> benefits = [
+    {"icon": Icons.flash_on_rounded, "text": "Instant Decision"},
+    {"icon": Icons.percent_rounded, "text": "Low Rates"},
+    {"icon": Icons.shield_rounded, "text": "100% Secure"},
+    {"icon": Icons.support_agent_rounded, "text": "24/7 Support"},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnim =
+        CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _slideAnim = Tween<Offset>(
+      begin: const Offset(0, 0.12),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
+
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
-      appBar: AppBar(
-        title: const Text('Loans'),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ===== LOAN SUMMARY =====
-            const LoanSummaryCard(),
-
-            const SizedBox(height: 30),
-
-            // ===== SECTION TITLE =====
-            const Text(
-              'Available Loan Products',
+      backgroundColor: const Color(0xFFF0F4FF),
+      body: CustomScrollView(
+        slivers: [
+          // ─────────────── SLIVER APP BAR ───────────────
+          SliverAppBar(
+            expandedHeight: 220,
+            pinned: true,
+            backgroundColor: const Color(0xFF0057D9),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            flexibleSpace: FlexibleSpaceBar(
+              background: _buildHeroHeader(),
+            ),
+            title: const Text(
+              "Loan Products",
               style: TextStyle(
-                fontSize: 20,
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
+            centerTitle: true,
+          ),
 
-            const SizedBox(height: 15),
+          // ─────────────── BODY CONTENT ───────────────
+          SliverToBoxAdapter(
+            child: FadeTransition(
+              opacity: _fadeAnim,
+              child: SlideTransition(
+                position: _slideAnim,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ── QUICK BENEFITS ROW ──
+                      _buildBenefitsRow(),
 
-            // ===== LOAN PRODUCTS GRID =====
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              childAspectRatio: 0.85,
-              children: const [
-                LoanProductCard(
-                  icon: Icons.person,
-                  title: 'Personal Loan',
-                  limit: 'Up to 50M',
-                  color: Color(0xFF90CAF9),
-                ),
-                LoanProductCard(
-                  icon: Icons.business_center,
-                  title: 'Business Loan',
-                  limit: 'Up to 50M',
-                  color: Color(0xFFA5D6A7),
-                ),
-                LoanProductCard(
-                  icon: Icons.school,
-                  title: 'School Fees Loan',
-                  limit: 'Up to 30M',
-                  color: Color(0xFFFFCC80),
-                ),
-                LoanProductCard(
-                  icon: Icons.home_work,
-                  title: 'Land Title Loan',
-                  limit: 'Up to 50M',
-                  color: Color(0xFFCE93D8),
-                ),
-              ],
-            ),
+                      const SizedBox(height: 28),
 
-            const SizedBox(height: 30),
+                      // ── SECTION TITLE ──
+                      _buildSectionTitle("Choose a Loan Type"),
 
-            // ===== APPLY BUTTON =====
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const TermsAndConditionsScreen(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.attach_money, size: 24),
-                label: const Text(
-                  'Apply for a Loan',
-                  style: TextStyle(fontSize: 18),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
+                      const SizedBox(height: 16),
+
+                      // ── LOAN PRODUCTS ──
+                      ...loanProducts.asMap().entries.map((entry) {
+                        return _buildLoanCard(entry.key, entry.value);
+                      }),
+
+                      const SizedBox(height: 10),
+
+                      // ── ELIGIBILITY BANNER ──
+                      _buildEligibilityBanner(),
+
+                      const SizedBox(height: 28),
+
+                      // ── REQUIREMENTS ──
+                      _buildSectionTitle("Requirements"),
+                      const SizedBox(height: 14),
+                      _buildRequirements(),
+
+                      const SizedBox(height: 28),
+
+                      // ── APPLY BUTTON ──
+                      _buildApplyButton(context),
+
+                      const SizedBox(height: 12),
+
+                      // ── DISCLAIMER ──
+                      Center(
+                        child: Text(
+                          "By applying, you agree to our Terms & Conditions.",
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.grey.shade500),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+
+                      const SizedBox(height: 30),
+                    ],
                   ),
-                  elevation: 5,
-                  shadowColor: Colors.blue.withOpacity(0.5),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-// ===== LOAN SUMMARY CARD =====
-class LoanSummaryCard extends StatelessWidget {
-  const LoanSummaryCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  // ─────────────────────────────────────────────
+  //  HERO HEADER
+  // ─────────────────────────────────────────────
+  Widget _buildHeroHeader() {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF42A5F5), Color(0xFF1E88E5)],
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF0035A0), Color(0xFF0A84FF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            'Loan Status',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white70,
+      child: Stack(
+        children: [
+          // Decorative circles
+          Positioned(
+            top: -30,
+            right: -30,
+            child: Container(
+              width: 140,
+              height: 140,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.07),
+              ),
             ),
           ),
-          SizedBox(height: 10),
-          Text(
-            'You have no active loans',
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.white,
+          Positioned(
+            bottom: -20,
+            left: -20,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.07),
+              ),
             ),
           ),
-          SizedBox(height: 8),
-          Text(
-            'Eligible Amount: UGX 50,000,000',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          // Content
+          Padding(
+            padding: const EdgeInsets.fromLTRB(22, 70, 22, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    "🟢  No Active Loans",
+                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "UGX 50,000,000",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  "Maximum eligible amount",
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
-}
 
-// ===== LOAN PRODUCT CARD =====
-class LoanProductCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String limit;
-  final Color color;
-
-  const LoanProductCard({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.limit,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Optional: navigate to loan details
-      },
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+  // ─────────────────────────────────────────────
+  //  BENEFITS ROW
+  // ─────────────────────────────────────────────
+  Widget _buildBenefitsRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: benefits.map((b) {
+        return Column(
           children: [
-            Icon(icon, size: 36, color: Colors.white),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
                 color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF0A84FF).withOpacity(0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ],
               ),
+              child: Icon(b["icon"] as IconData,
+                  color: const Color(0xFF0057D9), size: 22),
             ),
             const SizedBox(height: 6),
             Text(
-              limit,
+              b["text"] as String,
               style: const TextStyle(
-                fontSize: 13,
-                color: Colors.white70,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF0D1B40),
               ),
             ),
           ],
+        );
+      }).toList(),
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  //  SECTION TITLE
+  // ─────────────────────────────────────────────
+  Widget _buildSectionTitle(String title) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 20,
+          decoration: BoxDecoration(
+            color: const Color(0xFF0A84FF),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF0D1B40),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  //  LOAN PRODUCT CARD
+  // ─────────────────────────────────────────────
+  Widget _buildLoanCard(int index, Map<String, dynamic> product) {
+    final bool isSelected = _selectedProduct == index;
+    final List<Color> gradientColors =
+        (product["gradient"] as List).cast<Color>();
+
+    return GestureDetector(
+      onTap: () => setState(() =>
+          _selectedProduct = isSelected ? -1 : index),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        margin: const EdgeInsets.only(bottom: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: isSelected
+                ? gradientColors[0]
+                : Colors.transparent,
+            width: 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected
+                  ? gradientColors[0].withOpacity(0.25)
+                  : Colors.black.withOpacity(0.07),
+              blurRadius: isSelected ? 16 : 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              // Icon container
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: gradientColors,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(product["icon"] as IconData,
+                    color: Colors.white, size: 26),
+              ),
+              const SizedBox(width: 14),
+              // Text
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product["title"] as String,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0D1B40),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      product["desc"] as String,
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.grey.shade500),
+                    ),
+                  ],
+                ),
+              ),
+              // Limit badge
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: gradientColors[0].withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      product["limit"] as String,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: gradientColors[0],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Icon(
+                    isSelected
+                        ? Icons.check_circle_rounded
+                        : Icons.chevron_right_rounded,
+                    color: isSelected
+                        ? gradientColors[0]
+                        : Colors.grey.shade400,
+                    size: 22,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  //  ELIGIBILITY BANNER
+  // ─────────────────────────────────────────────
+  Widget _buildEligibilityBanner() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF0057D9).withOpacity(0.08),
+            const Color(0xFF0A84FF).withOpacity(0.04),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF0A84FF).withOpacity(0.2),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0A84FF).withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.verified_rounded,
+                color: Color(0xFF0057D9), size: 22),
+          ),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "You're Pre-Qualified!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Color(0xFF0D1B40),
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  "Based on your profile, you qualify for up to UGX 50M.",
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  //  REQUIREMENTS
+  // ─────────────────────────────────────────────
+  Widget _buildRequirements() {
+    final reqs = [
+      {"icon": Icons.badge_rounded, "text": "Valid National ID"},
+      {"icon": Icons.receipt_long_rounded, "text": "Proof of Income / Pay Slip"},
+      {"icon": Icons.account_balance_rounded, "text": "Bank Statement (3 months)"},
+      {"icon": Icons.home_rounded, "text": "Proof of Residence"},
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: const [
+          BoxShadow(
+              color: Colors.black12, blurRadius: 8, offset: Offset(0, 3))
+        ],
+      ),
+      child: Column(
+        children: reqs.asMap().entries.map((entry) {
+          bool isLast = entry.key == reqs.length - 1;
+          var req = entry.value;
+          return Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0A84FF).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(req["icon"] as IconData,
+                        color: const Color(0xFF0057D9), size: 18),
+                  ),
+                  const SizedBox(width: 14),
+                  Text(
+                    req["text"] as String,
+                    style: const TextStyle(
+                        fontSize: 14, color: Color(0xFF0D1B40)),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.check_rounded,
+                      color: Color(0xFF30D158), size: 18),
+                ],
+              ),
+              if (!isLast)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Divider(color: Colors.grey.shade100, height: 1),
+                ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  //  APPLY BUTTON
+  // ─────────────────────────────────────────────
+  Widget _buildApplyButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 58,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0035A0), Color(0xFF0A84FF)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0057D9).withOpacity(0.4),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const TermsAndConditionsScreen()),
+            );
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.attach_money_rounded, color: Colors.white, size: 22),
+              SizedBox(width: 8),
+              Text(
+                "Apply for a Loan",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.4,
+                ),
+              ),
+              SizedBox(width: 8),
+              Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-
-// import 'package:flutter/material.dart';
-// //import 'login_screen.dart';
-// import 'terms_screen.dart';
-
-// class LoanScreen extends StatelessWidget {
-//   const LoanScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: const Color.fromARGB(255, 255, 251, 250),
-//       appBar: AppBar(
-//         title: const Text('Loans'),
-//         centerTitle: true,
-//         elevation: 0,
-//         backgroundColor: Colors.white,
-//         foregroundColor: Colors.black,
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // -------- LOAN SUMMARY ----------
-//             const LoanSummaryCard(),
-
-//             const SizedBox(height: 30),
-
-//             // -------- SECTION TITLE ----------
-//             const Text(
-//               'Available Loan Products',
-//               style: TextStyle(
-//                 fontSize: 20,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-
-//             const SizedBox(height: 15),
-
-//             // -------- LOAN PRODUCTS ----------
-//             GridView.count(
-//               shrinkWrap: true,
-//               physics: const NeverScrollableScrollPhysics(),
-//               crossAxisCount: 2,
-//               crossAxisSpacing: 15,
-//               mainAxisSpacing: 15,
-//               children: const [
-//                 LoanProductCard(
-//                   icon: Icons.person,
-//                   title: 'Personal Loan',
-//                   limit: 'Up to 50M',
-//                 ),
-//                 LoanProductCard(
-//                   icon: Icons.business_center,
-//                   title: 'Business Loan',
-//                   limit: 'Up to 50M',
-//                 ),
-//                 LoanProductCard(
-//                   icon: Icons.school,
-//                   title: 'School Fees Loan',
-//                   limit: 'Up to 30M',
-//                 ),
-//                 LoanProductCard(
-//                   icon: Icons.home_work,
-//                   title: 'Land Title Loan',
-//                   limit: 'Up to 50M',
-//                 ),
-//               ],
-//             ),
-
-//             const SizedBox(height: 30),
-
-//             // -------- APPLY BUTTON ----------
-//             SizedBox(
-//               width: double.infinity,
-//               height: 55,
-//               child: ElevatedButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (_) => const TermsAndConditionsScreen(),
-//     ),
-//   );
-//                   // Navigate to Apply Loan (later)
-//                 },
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: const Color.fromARGB(255, 125, 186, 230),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(14),
-//                   ),
-//                 ),
-//                 child: const Text(
-//                   'Apply for a Loan',
-//                   style: TextStyle(fontSize: 18),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-// class LoanSummaryCard extends StatelessWidget {
-//   const LoanSummaryCard({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(20),
-//       decoration: BoxDecoration(
-//         color: Colors.blue[50],
-//         borderRadius: BorderRadius.circular(16),
-//         boxShadow: const [
-//           BoxShadow(
-//             color: Colors.black12,
-//             blurRadius: 6,
-//             offset: Offset(0, 3),
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: const [
-//           Text(
-//             'Loan Status',
-//             style: TextStyle(
-//               fontSize: 16,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//           SizedBox(height: 10),
-//           Text(
-//             'You have no active loans',
-//             style: TextStyle(fontSize: 15),
-//           ),
-//           SizedBox(height: 5),
-//           Text(
-//             'You are eligible to borrow up to 50M',
-//             style: TextStyle(
-//               fontSize: 14,
-//               color: Colors.black54,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
-// class LoanProductCard extends StatelessWidget {
-//   final IconData icon;
-//   final String title;
-//   final String limit;
-
-//   const LoanProductCard({
-//     super.key,
-//     required this.icon,
-//     required this.title,
-//     required this.limit,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(16),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(14),
-//         boxShadow: const [
-//           BoxShadow(
-//             color: Colors.black12,
-//             blurRadius: 6,
-//             offset: Offset(0, 3),
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Icon(icon, size: 36, color: Colors.blue),
-//           const SizedBox(height: 12),
-//           Text(
-//             title,
-//             textAlign: TextAlign.center,
-//             style: const TextStyle(
-//               fontWeight: FontWeight.bold,
-//               fontSize: 15,
-//             ),
-//           ),
-//           const SizedBox(height: 6),
-//           Text(
-//             limit,
-//             style: const TextStyle(
-//               fontSize: 13,
-//               color: Colors.black54,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

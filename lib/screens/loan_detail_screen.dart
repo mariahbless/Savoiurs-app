@@ -120,7 +120,7 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ─── STATUS BANNER ───────────────────────────────────────
+            //STATUS BANNER 
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -164,7 +164,7 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
 
             const SizedBox(height: 20),
 
-            // ─── LOAN INFO CARD ───────────────────────────────────────
+            //  LOAN INFO CARD 
             _infoCard("Loan Information", [
               _infoRow("Purpose",
                   _loan['purpose']?.toString() ?? '-'),
@@ -204,7 +204,7 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
 
             const SizedBox(height: 16),
 
-            // ─── REPAYMENT SUMMARY ────────────────────────────────────
+            // REPAYMENT SUMMARY 
             _infoCard("Repayment Summary", [
               _infoRow(
                   "Loan Amount",
