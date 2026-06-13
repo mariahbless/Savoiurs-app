@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import 'loan_service.dart';
 
-// ─── Design Tokens ────────────────────────────────────────────────────────────
+
 class _C {
   static const navy        = Color(0xFF0A1628);
   static const navyMid     = Color(0xFF0F2044);
   static const blue        = Color(0xFF1565C0);
-  static const blueLight   = Color(0xFF1E88E5);
   static const blueBright  = Color(0xFF2979FF);
-  static const accent      = Color(0xFF4FC3F7); // sky accent
+  static const accent      = Color(0xFF4FC3F7); 
   static const gold        = Color(0xFFFFD54F);
   static const surface     = Color(0xFFFFFFFF);
   static const surfaceDim  = Color(0xFFF0F4FF);
@@ -24,7 +23,7 @@ class _C {
   static const error       = Color(0xFFE53935);
 }
 
-// ─── App ──────────────────────────────────────────────────────────────────────
+
 class LoanApplicationScreen extends StatefulWidget {
   const LoanApplicationScreen({super.key});
 
@@ -39,7 +38,6 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
   late final AnimationController _heroAnim;
   late final Animation<double> _heroFade;
 
-  // Controllers
   final _amountCtrl         = TextEditingController();
   final _nameCtrl           = TextEditingController();
   final _emailCtrl          = TextEditingController();
@@ -115,7 +113,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
         return;
       }
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/loans'),
+        Uri.parse(LoanService.createLoanUrl),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -170,9 +168,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     ));
   }
 
-  // ── Widgets ────────────────────────────────────────────────────────────────
 
-  /// Glassmorphic section card
   Widget _card({required String title, required IconData icon, required List<Widget> children}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -187,7 +183,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Card header strip
+      
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
@@ -235,7 +231,6 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     );
   }
 
-  /// Styled text field
   Widget _field({
     required TextEditingController controller,
     required String label,
@@ -288,7 +283,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     );
   }
 
-  /// Styled dropdown
+
   Widget _dropdown<T>({
     required String label,
     required IconData icon,
@@ -300,7 +295,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<T>(
-        value: value,
+        initialValue: value,
         dropdownColor: _C.surface,
         style: const TextStyle(color: _C.textPri, fontSize: 15, fontWeight: FontWeight.w500),
         icon: const Icon(Icons.keyboard_arrow_down_rounded, color: _C.blue),
@@ -326,7 +321,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     );
   }
 
-  /// +256 dial badge
+
   Widget _dialBadge() {
     return Container(
       margin: const EdgeInsets.only(right: 6),
@@ -341,7 +336,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     );
   }
 
-  /// ID upload box
+  
   Widget _idBox({required String label, required bool isFront, required Uint8List? bytes}) {
     final has = bytes != null;
     return Expanded(
@@ -365,7 +360,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                   borderRadius: BorderRadius.circular(15),
                   child: Image.memory(bytes, fit: BoxFit.cover),
                 ),
-                // dark overlay bottom
+                
                 Positioned(
                   bottom: 0, left: 0, right: 0,
                   child: Container(
@@ -383,7 +378,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                       style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
                   ),
                 ),
-                // check badge
+              
                 Positioned(top: 8, left: 8,
                   child: Container(
                     padding: const EdgeInsets.all(4),
@@ -391,7 +386,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                     child: const Icon(Icons.check, color: Colors.white, size: 13),
                   ),
                 ),
-                // remove
+        
                 Positioned(top: 6, right: 6,
                   child: GestureDetector(
                     onTap: () => setState(() {
@@ -428,7 +423,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     );
   }
 
-  /// Upload status chip
+
   Widget _statusChip(String label, bool done) {
     return Row(mainAxisSize: MainAxisSize.min, children: [
       AnimatedContainer(
@@ -458,7 +453,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
       backgroundColor: _C.navy,
       body: CustomScrollView(
         slivers: [
-          // ── Hero App Bar ────────────────────────────────────────────────
+        
           SliverAppBar(
   expandedHeight: 100,
   pinned: true,
@@ -488,7 +483,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
       child: Stack(
         clipBehavior: Clip.hardEdge,
         children: [
-          // decorative circles
+        
           Positioned(
             top: -40, right: -40,
             child: Container(
@@ -509,7 +504,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
               ),
             ),
           ),
-          // content
+  
           FadeTransition(
             opacity: _heroFade,
             child: SafeArea(
@@ -518,7 +513,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(width: 48), // space for the leading back button
+                    const SizedBox(width: 48), 
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -572,7 +567,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
     ),
   ),
 ),
-          // ── Form Body ───────────────────────────────────────────────────
+          
           SliverToBoxAdapter(
             child: Container(
               decoration: const BoxDecoration(
@@ -589,7 +584,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                   child: Column(
                     children: [
 
-                      // ── Personal Information ──────────────────────────
+                
                       _card(
                         title: 'Personal Information',
                         icon: Icons.person_rounded,
@@ -626,7 +621,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                         ],
                       ),
 
-                      // ── Next of Kin ───────────────────────────────────
+                
                       _card(
                         title: 'Next of Kin',
                         icon: Icons.people_alt_rounded,
@@ -637,7 +632,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                         ],
                       ),
 
-                      // ── Loan Details ──────────────────────────────────
+              
                       _card(
                         title: 'Loan Details',
                         icon: Icons.account_balance_rounded,
@@ -665,7 +660,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                         ],
                       ),
 
-                      // ── Identity Verification ─────────────────────────
+              
                       _card(
                         title: 'Identity Verification',
                         icon: Icons.verified_user_rounded,
@@ -679,7 +674,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                             _idBox(label: 'Back Side',  isFront: false, bytes: _backBytes),
                           ]),
                           const SizedBox(height: 14),
-                          // status row
+                  
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             decoration: BoxDecoration(
@@ -699,7 +694,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                         ],
                       ),
 
-                      // ── Submit ────────────────────────────────────────
+          
                       const SizedBox(height: 8),
                       SizedBox(
                         width: double.infinity,
@@ -738,7 +733,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
                             ),
                       ),
                       const SizedBox(height: 16),
-                      // disclaimer
+                      
                       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                         Icon(Icons.lock_outline_rounded, color: _C.textSec, size: 13),
                         const SizedBox(width: 5),
@@ -758,7 +753,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen>
 }
 
 
-// ─── Loan Success Screen ───────────────────────────────────────────────────────
+
 class LoanSuccessScreen extends StatelessWidget {
   final String amount;
   final String loanType;
@@ -776,7 +771,7 @@ class LoanSuccessScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              // Success animation ring
+            
               Container(
                 width: 110, height: 110,
                 decoration: BoxDecoration(
@@ -797,7 +792,7 @@ class LoanSuccessScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white60, fontSize: 14, height: 1.6)),
               const SizedBox(height: 32),
-              // Summary card
+          
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
@@ -822,7 +817,7 @@ class LoanSuccessScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 28),
-              // Back button
+          
               SizedBox(
                 width: double.infinity, height: 56,
                 child: DecoratedBox(

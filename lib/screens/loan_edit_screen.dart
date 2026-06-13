@@ -34,7 +34,7 @@ class _LoanEditScreenState extends State<LoanEditScreen> {
         text: widget.loan['collateral']?.toString() ?? '');
     _selectedDescription = widget.loan['description']?.toString();
 
-    // If saved description doesn't match list, reset to null
+  
     if (_selectedDescription != null &&
         !_loanTypes.contains(_selectedDescription)) {
       _selectedDescription = null;
@@ -90,7 +90,7 @@ class _LoanEditScreenState extends State<LoanEditScreen> {
     final status =
         (widget.loan['status'] ?? '').toString().toLowerCase();
 
-    // Guard: not pending — show locked screen
+    
     if (status != 'pending') {
       return Scaffold(
         appBar: AppBar(title: const Text("Edit Loan"), centerTitle: true),
@@ -133,7 +133,7 @@ class _LoanEditScreenState extends State<LoanEditScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Notice banner
+          
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -157,7 +157,7 @@ class _LoanEditScreenState extends State<LoanEditScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Amount
+              
               _buildField(
                 controller: _amountController,
                 label: "Loan Amount (UGX)",
@@ -176,7 +176,7 @@ class _LoanEditScreenState extends State<LoanEditScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Loan Type Dropdown
+            
               const Text("Loan Type",
                   style: TextStyle(
                       fontWeight: FontWeight.w500, fontSize: 13)),
@@ -208,17 +208,16 @@ class _LoanEditScreenState extends State<LoanEditScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Collateral
+             
               _buildField(
                 controller: _collateralController,
                 label: "Collateral (optional)",
                 icon: Icons.home_work_outlined,
                 maxLines: 2,
-                validator: (_) => null, // optional
+                validator: (_) => null,
               ),
               const SizedBox(height: 32),
 
-              // Save button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

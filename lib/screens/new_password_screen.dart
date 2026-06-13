@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../constants.dart';
 import 'login_screen.dart';
 
 class NewPasswordScreen extends StatefulWidget {
-  final String email; // ✅ receives email from previous screen
+  final String email; 
 
   const NewPasswordScreen({super.key, required this.email});
 
@@ -38,9 +39,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
       });
 
       try {
-        // 1. Send POST request to Laravel
+        
         final response = await http.post(
-          Uri.parse('http://127.0.0.1:8000/api/reset-password'),
+          Uri.parse('${AppConstants.apiBaseUrl}/reset-password'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -53,11 +54,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
           }),
         );
 
-        // 2. Decode the response
+        
         final data = jsonDecode(response.body);
 
         if (response.statusCode == 200 && data['success'] == true) {
-          // 3. Show success message
+          
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Password reset successfully! Please login.'),
@@ -65,19 +66,19 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
             ),
           );
 
-          // 4. Navigate back to Login screen
+        
           Future.delayed(const Duration(seconds: 2), () {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) => const LoginScreen(),
               ),
-              (route) => false, // clears all previous screens
+              (route) => false, 
             );
           });
 
         } else {
-          // Failed — show error
+          
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(data['message'] ?? 'Something went wrong'),
@@ -86,7 +87,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
           );
         }
       } catch (e) {
-        // Network error
+    
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Connection error. Check your internet or server.'),
@@ -115,7 +116,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              // 🔹 Circular logo with shadow
+        
               Container(
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
@@ -135,7 +136,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                 ),
               ),
 
-              // 🔹 Card with form
+      
               Card(
                 color: Colors.blue.shade50,
                 elevation: 5,
@@ -159,7 +160,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         ),
                         const SizedBox(height: 10),
 
-                        // 🔹 Show email being reset
+                
                         Text(
                           "Resetting password for:\n${widget.email}",
                           textAlign: TextAlign.center,
@@ -168,7 +169,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         ),
                         const SizedBox(height: 10),
 
-                        // 🔹 Instruction
+                  
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -184,7 +185,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         ),
                         const SizedBox(height: 25),
 
-                        // 🔹 Token input
+              
                         TextFormField(
                           controller: _tokenController,
                           decoration: InputDecoration(
@@ -205,7 +206,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         ),
                         const SizedBox(height: 15),
 
-                        // 🔹 New Password input
+                
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
@@ -241,7 +242,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         ),
                         const SizedBox(height: 15),
 
-                        // 🔹 Confirm Password input
+                  
                         TextFormField(
                           controller: _confirmPasswordController,
                           obscureText: _obscureConfirmPassword,
@@ -278,7 +279,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                         ),
                         const SizedBox(height: 25),
 
-                        // 🔹 Submit Button
+                    
                         _isLoading
                             ? const CircularProgressIndicator()
                             : ElevatedButton(
@@ -299,7 +300,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                               ),
                         const SizedBox(height: 15),
 
-                        // 🔹 Back to Login
+                    
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);

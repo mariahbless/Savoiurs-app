@@ -24,7 +24,7 @@ class _AboutScreenState extends State<AboutScreen>
   final List<Map<String, String>> stats = [
     {"value": "1,200+", "label": "Clients Served", "icon": "👥"},
     {"value": "1,000+", "label": "Loans Disbursed", "icon": "💰"},
-    {"value": "24 hrs", "label": "Approval Time", "icon": "⚡"},
+    {"value": "24 hrs", "label": "Approval Time", "icon": "⏱️"},
     {"value": "1", "label": "Branch", "icon": "🏢"},
   ];
 
@@ -61,7 +61,7 @@ class _AboutScreenState extends State<AboutScreen>
       backgroundColor: const Color(0xFFF0F4FF),
       body: CustomScrollView(
         slivers: [
-          // ─────────── SLIVER HERO ───────────
+          
           SliverAppBar(
             expandedHeight: 260,
             pinned: true,
@@ -78,7 +78,7 @@ class _AboutScreenState extends State<AboutScreen>
             ),
           ),
 
-          // ─────────── BODY ───────────
+      
           SliverToBoxAdapter(
             child: FadeTransition(
               opacity: _fadeAnim,
@@ -89,33 +89,33 @@ class _AboutScreenState extends State<AboutScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── MISSION CARD ──
+                    
                       _buildMissionCard(),
 
                       const SizedBox(height: 28),
 
-                      // ── CORE VALUES ──
+                  
                       _buildSectionTitle("Our Core Values"),
                       const SizedBox(height: 16),
                       _buildCoreValues(),
 
                       const SizedBox(height: 28),
 
-                      // ── STATS ──
+            
                       _buildSectionTitle("Our Achievements"),
                       const SizedBox(height: 16),
                       _buildStatsGrid(),
 
                       const SizedBox(height: 28),
 
-                      // ── WHY US ──
+              
                       _buildSectionTitle("Why Choose Us"),
                       const SizedBox(height: 16),
                       _buildWhyUs(),
 
                       const SizedBox(height: 28),
 
-                      // ── CONTACT ──
+              
                       _buildSectionTitle("Get In Touch"),
                       const SizedBox(height: 16),
                       _buildContactSection(),
@@ -143,7 +143,7 @@ class _AboutScreenState extends State<AboutScreen>
     child: Stack(
       clipBehavior: Clip.hardEdge,
       children: [
-        // Decorative circles
+        
         Positioned(
           top: -40, right: -40,
           child: Container(
@@ -175,7 +175,7 @@ class _AboutScreenState extends State<AboutScreen>
           ),
         ),
 
-        // Content — fully centered
+  
         Positioned.fill(
           child: SafeArea(
             child: Center(
@@ -184,7 +184,7 @@ class _AboutScreenState extends State<AboutScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Logo
+            
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -200,7 +200,7 @@ class _AboutScreenState extends State<AboutScreen>
                   ),
                   const SizedBox(height: 14),
 
-                  // Title
+                
                   const Text(
                     "Saviours Finance Int LTD",
                     textAlign: TextAlign.center,
@@ -213,7 +213,7 @@ class _AboutScreenState extends State<AboutScreen>
                   ),
                   const SizedBox(height: 10),
 
-                  // Pills row
+                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -393,7 +393,7 @@ class _AboutScreenState extends State<AboutScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
 
-                // Icon Container
+          
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -409,7 +409,7 @@ class _AboutScreenState extends State<AboutScreen>
 
                 const SizedBox(height: 12),
 
-                // Title
+          
                 Text(
                   item["title"] as String,
                   textAlign: TextAlign.center,
@@ -438,7 +438,7 @@ class _AboutScreenState extends State<AboutScreen>
       crossAxisSpacing: 14,
       mainAxisSpacing: 14,
 
-      // Increased height slightly to avoid overflow
+    
       childAspectRatio: 1.3,
     ),
     itemBuilder: (context, index) {
@@ -475,7 +475,7 @@ class _AboutScreenState extends State<AboutScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
 
-              // Icon
+        
               Text(
                 stat["icon"]!,
                 textAlign: TextAlign.center,
@@ -486,7 +486,7 @@ class _AboutScreenState extends State<AboutScreen>
 
               const SizedBox(height: 8),
 
-              // Value
+            
               Text(
                 stat["value"]!,
                 textAlign: TextAlign.center,
@@ -499,7 +499,7 @@ class _AboutScreenState extends State<AboutScreen>
 
               const SizedBox(height: 4),
 
-              // Label
+        
               Text(
                 stat["label"]!,
                 textAlign: TextAlign.center,

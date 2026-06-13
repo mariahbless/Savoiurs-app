@@ -11,8 +11,8 @@ class _SplashScreenState extends State<SplashScreen> {
  @override
  void initState() {
  super.initState();
- // Move to Onboarding after 3 seconds
- Timer(Duration(seconds: 3), () {
+ 
+ Timer(Duration(seconds: 4), () {
  Navigator.pushReplacement(
  context,
  MaterialPageRoute(builder: (context) => OnboardingScreen()),
@@ -28,13 +28,13 @@ class _SplashScreenState extends State<SplashScreen> {
  child: Column(
  mainAxisAlignment: MainAxisAlignment.center,
  children: [
- // App logo or icon
+
  Image.asset('assets/logo.png', height: 200),
  SizedBox(height: 40),
  Text(
  "My Awesome App",
  style: TextStyle(
- color: Colors.white,
+ color: const Color.fromARGB(255, 75, 176, 235),
  fontSize: 24,
  fontWeight: FontWeight.bold,
  ),

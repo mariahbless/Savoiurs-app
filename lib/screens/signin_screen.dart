@@ -1,9 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
-import 'password_reset.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../constants.dart';
 import 'main_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen>
     with SingleTickerProviderStateMixin {
-  final _formKey = GlobalKey<FormState>();
+ 
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -144,7 +145,7 @@ class _SignInScreenState extends State<SignInScreen>
 
     setState(() => _isLoading = true);
 
-    final url = Uri.parse('http://localhost:8000/api/register');
+    final url = Uri.parse('${AppConstants.apiBaseUrl}/register');
     try {
       final response = await http.post(
         url,
@@ -164,9 +165,18 @@ class _SignInScreenState extends State<SignInScreen>
       );
 
       if (response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', data['token']);
+        await prefs.setString('user_name', data['user']['name']);
+        await prefs.setString('user_email', data['user']['email']);
+        await prefs.setString('user_phone', data['user']['phone']);
+        await prefs.setString('user_location', data['user']['location']);
+        await prefs.setInt('user_id', data['user']['id']);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Registration successful! Welcome '),
+            content: Text('Registration successful! Welcome ${data['user']['name']}'),
             backgroundColor: const Color(0xFF30D158),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -231,10 +241,10 @@ class _SignInScreenState extends State<SignInScreen>
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // ─────────── HERO HEADER ───────────
+            
               _buildHeroHeader(),
 
-              // ─────────── FORM ───────────
+             
               FadeTransition(
                 opacity: _fadeAnim,
                 child: SlideTransition(
@@ -273,7 +283,7 @@ class _SignInScreenState extends State<SignInScreen>
 
                           const SizedBox(height: 24),
 
-                          // ── NAME ROW ──
+                  
                           Row(
                             children: [
                               Expanded(
@@ -281,7 +291,7 @@ class _SignInScreenState extends State<SignInScreen>
                                   label: "First Name",
                                   controller: _firstNameController,
                                   field: 'firstName',
-                                  hint: "John",
+                                  hint: "Elon",
                                   icon: Icons.person_outline_rounded,
                                 ),
                               ),
@@ -291,7 +301,7 @@ class _SignInScreenState extends State<SignInScreen>
                                   label: "Last Name",
                                   controller: _lastNameController,
                                   field: 'lastName',
-                                  hint: "Doe",
+                                  hint: "klea",
                                   icon: Icons.person_outline_rounded,
                                 ),
                               ),
@@ -300,7 +310,7 @@ class _SignInScreenState extends State<SignInScreen>
 
                           const SizedBox(height: 16),
 
-                          // ── EMAIL ──
+                  
                           _buildField(
                             label: "Email Address",
                             controller: _emailController,
@@ -312,7 +322,7 @@ class _SignInScreenState extends State<SignInScreen>
 
                           const SizedBox(height: 16),
 
-                          // ── PHONE (with +256 prefix) ──
+                          
                           _buildField(
                             label: "Phone Number",
                             controller: _phoneController,
@@ -325,14 +335,14 @@ class _SignInScreenState extends State<SignInScreen>
 
                           const SizedBox(height: 16),
 
-                          // ── LOCATION ──
+                      
                           _buildLabel("Location"),
                           const SizedBox(height: 6),
                           _buildLocationDropdown(),
 
                           const SizedBox(height: 16),
 
-                          // ── PASSWORD ──
+                
                           _buildField(
                             label: "Password",
                             controller: _passwordController,
@@ -355,7 +365,7 @@ class _SignInScreenState extends State<SignInScreen>
 
                           const SizedBox(height: 16),
 
-                          // ── CONFIRM PASSWORD ──
+                  
                           _buildField(
                             label: "Confirm Password",
                             controller: _confirmPasswordController,
@@ -378,28 +388,28 @@ class _SignInScreenState extends State<SignInScreen>
 
                           const SizedBox(height: 28),
 
-                          // ── SUBMIT BUTTON ──
+                
                           _buildSubmitButton(),
 
                           const SizedBox(height: 20),
 
-                          // ── DIVIDER ──
+                  
                           Row(
                             children: [
-                              Expanded(child: Divider(color: Colors.grey.shade200)),
+                              Expanded(child: Divider(color: const Color.fromARGB(255, 59, 54, 54))),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 12),
                                 child: Text("or",
                                     style: TextStyle(
-                                        color: Colors.grey.shade400, fontSize: 13)),
+                                        color: const Color.fromARGB(255, 117, 114, 114), fontSize: 13)),
                               ),
-                              Expanded(child: Divider(color: Colors.grey.shade200)),
+                              Expanded(child: Divider(color: const Color.fromARGB(255, 59, 54, 54))),
                             ],
                           ),
 
                           const SizedBox(height: 20),
 
-                          // ── LOGIN LINK ──
+                      
                           Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -439,9 +449,6 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  HERO HEADER
-  // ─────────────────────────────────────────────
   Widget _buildHeroHeader() {
   return Container(
     width: double.infinity,
@@ -459,7 +466,7 @@ class _SignInScreenState extends State<SignInScreen>
     ),
     child: Stack(
       children: [
-        // Decorative circles
+    
         Positioned(
           top: -20, right: -20,
           child: Container(
@@ -481,11 +488,11 @@ class _SignInScreenState extends State<SignInScreen>
           ),
         ),
 
-        // ── CENTERED CONTENT ──
-        Center(                          // 👈 wrap with Center
+        
+        Center(                          
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,  // 👈 center horizontally
+            crossAxisAlignment: CrossAxisAlignment.center,  
             children: [
               Container(
                 
@@ -560,7 +567,7 @@ class _SignInScreenState extends State<SignInScreen>
           ),
           child: Row(
             children: [
-              // ── PREFIX BLOCK (only for phone) ──
+            
               if (prefix != null)
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -593,7 +600,7 @@ class _SignInScreenState extends State<SignInScreen>
                   ),
                 ),
 
-              // ── TEXT INPUT ──
+        
               Expanded(
                 child: TextField(
                   controller: controller,
@@ -652,9 +659,7 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  LOCATION DROPDOWN
-  // ─────────────────────────────────────────────
+  
   Widget _buildLocationDropdown() {
     final bool hasError =
         _errors['location'] != null && _touched['location']!;
@@ -737,9 +742,7 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  SUBMIT BUTTON
-  // ─────────────────────────────────────────────
+ 
   Widget _buildSubmitButton() {
     return Container(
       width: double.infinity,

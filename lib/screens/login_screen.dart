@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants.dart';
 import 'password_reset.dart';
 import 'signin_screen.dart';
 
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _loginUser() async {
-    // Touch all fields to trigger validation
+  
     setState(() {
       _emailTouched = true;
       _passwordTouched = true;
@@ -112,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen>
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/login'),
+        Uri.parse('${AppConstants.apiBaseUrl}/login'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -225,19 +226,19 @@ class _LoginScreenState extends State<LoginScreen>
 
                                 const SizedBox(height: 24),
 
-                                // EMAIL FIELD
+                            
                                 _buildLabel("Email Address"),
                                 const SizedBox(height: 6),
                                 _buildEmailField(),
 
                                 const SizedBox(height: 16),
 
-                                // PASSWORD FIELD
+                              
                                 _buildLabel("Password"),
                                 const SizedBox(height: 6),
                                 _buildPasswordField(),
 
-                                //FORGOT PASSWORD 
+                      
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: TextButton(
@@ -262,12 +263,12 @@ class _LoginScreenState extends State<LoginScreen>
 
                                 const SizedBox(height: 8),
 
-                                // LOGIN BUTTON
+                              
                                 _buildLoginButton(),
 
                                 const SizedBox(height: 20),
 
-                                  //DIVIDER
+                          
                                 Row(
                                   children: [
                                     Expanded(
@@ -289,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen>
 
                                 const SizedBox(height: 20),
 
-                                // REGISTER LINK 
+                        
                                 Center(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -352,7 +353,7 @@ class _LoginScreenState extends State<LoginScreen>
       ),
       child: Stack(
         children: [
-          // Decorative circles
+      
           Positioned(
             top: -20, right: -20,
             child: Container(
@@ -374,14 +375,14 @@ class _LoginScreenState extends State<LoginScreen>
             ),
           ),
 
-          // Content
+      
           Column(
             children: [
               const Text(
                 "Saviours Finance",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
                 ),
@@ -389,7 +390,7 @@ class _LoginScreenState extends State<LoginScreen>
               const SizedBox(height: 6),
               const Text(
                 "Fast • Secure • Reliable",
-                style: TextStyle(color: Color.fromARGB(179, 248, 250, 250), fontSize: 13),
+                style: TextStyle(color: Color.fromARGB(179, 253, 253, 253), fontSize: 15),
               ),
             ],
           ),

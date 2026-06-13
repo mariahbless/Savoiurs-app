@@ -82,7 +82,7 @@ class _LoanScreenState extends State<LoanScreen>
       backgroundColor: const Color(0xFFF0F4FF),
       body: CustomScrollView(
         slivers: [
-          // ─────────────── SLIVER APP BAR ───────────────
+         
           SliverAppBar(
             expandedHeight: 220,
             pinned: true,
@@ -103,7 +103,7 @@ class _LoanScreenState extends State<LoanScreen>
             centerTitle: true,
           ),
 
-          // ─────────────── BODY CONTENT ───────────────
+       
           SliverToBoxAdapter(
             child: FadeTransition(
               opacity: _fadeAnim,
@@ -114,46 +114,46 @@ class _LoanScreenState extends State<LoanScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── QUICK BENEFITS ROW ──
+                     
                       _buildBenefitsRow(),
 
                       const SizedBox(height: 28),
 
-                      // ── SECTION TITLE ──
+                  
                       _buildSectionTitle("Choose a Loan Type"),
 
                       const SizedBox(height: 16),
 
-                      // ── LOAN PRODUCTS ──
+                      
                       ...loanProducts.asMap().entries.map((entry) {
                         return _buildLoanCard(entry.key, entry.value);
                       }),
 
                       const SizedBox(height: 10),
 
-                      // ── ELIGIBILITY BANNER ──
+                    
                       _buildEligibilityBanner(),
 
                       const SizedBox(height: 28),
 
-                      // ── REQUIREMENTS ──
+                     
                       _buildSectionTitle("Requirements"),
                       const SizedBox(height: 14),
                       _buildRequirements(),
 
                       const SizedBox(height: 28),
 
-                      // ── APPLY BUTTON ──
+                     
                       _buildApplyButton(context),
 
                       const SizedBox(height: 12),
 
-                      // ── DISCLAIMER ──
+                     
                       Center(
                         child: Text(
                           "By applying, you agree to our Terms & Conditions.",
                           style: TextStyle(
-                              fontSize: 12, color: Colors.grey.shade500),
+                              fontSize: 12, color: const Color.fromARGB(255, 12, 1, 1)),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -170,9 +170,7 @@ class _LoanScreenState extends State<LoanScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  HERO HEADER
-  // ─────────────────────────────────────────────
+  
   Widget _buildHeroHeader() {
     return Container(
       decoration: const BoxDecoration(
@@ -184,7 +182,7 @@ class _LoanScreenState extends State<LoanScreen>
       ),
       child: Stack(
         children: [
-          // Decorative circles
+       
           Positioned(
             top: -30,
             right: -30,
@@ -209,7 +207,7 @@ class _LoanScreenState extends State<LoanScreen>
               ),
             ),
           ),
-          // Content
+       
           Padding(
             padding: const EdgeInsets.fromLTRB(22, 70, 22, 20),
             child: Column(
@@ -251,9 +249,6 @@ class _LoanScreenState extends State<LoanScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  BENEFITS ROW
-  // ─────────────────────────────────────────────
   Widget _buildBenefitsRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,9 +286,7 @@ class _LoanScreenState extends State<LoanScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  SECTION TITLE
-  // ─────────────────────────────────────────────
+ 
   Widget _buildSectionTitle(String title) {
     return Row(
       children: [
@@ -318,9 +311,7 @@ class _LoanScreenState extends State<LoanScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  LOAN PRODUCT CARD
-  // ─────────────────────────────────────────────
+
   Widget _buildLoanCard(int index, Map<String, dynamic> product) {
     final bool isSelected = _selectedProduct == index;
     final List<Color> gradientColors =
@@ -356,7 +347,7 @@ class _LoanScreenState extends State<LoanScreen>
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              // Icon container
+             
               Container(
                 width: 54,
                 height: 54,
@@ -372,7 +363,7 @@ class _LoanScreenState extends State<LoanScreen>
                     color: Colors.white, size: 26),
               ),
               const SizedBox(width: 14),
-              // Text
+            
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -394,7 +385,7 @@ class _LoanScreenState extends State<LoanScreen>
                   ],
                 ),
               ),
-              // Limit badge
+           
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -433,9 +424,7 @@ class _LoanScreenState extends State<LoanScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  ELIGIBILITY BANNER
-  // ─────────────────────────────────────────────
+ 
   Widget _buildEligibilityBanner() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -490,9 +479,7 @@ class _LoanScreenState extends State<LoanScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  REQUIREMENTS
-  // ─────────────────────────────────────────────
+   
   Widget _buildRequirements() {
     final reqs = [
       {"icon": Icons.badge_rounded, "text": "Valid National ID"},
@@ -551,9 +538,7 @@ class _LoanScreenState extends State<LoanScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  APPLY BUTTON
-  // ─────────────────────────────────────────────
+ 
   Widget _buildApplyButton(BuildContext context) {
     return Container(
       width: double.infinity,

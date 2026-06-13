@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../constants.dart';
 import 'new_password_screen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -69,7 +70,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/forgot-password'),
+        Uri.parse('${AppConstants.apiBaseUrl}/forgot-password'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -197,7 +198,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
       ),
       child: Stack(
         children: [
-          // Decorative circles
+        
           Positioned(
             top: -20, right: -20,
             child: Container(
@@ -219,32 +220,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
             ),
           ),
 
-          // Centered content
+          
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Lock icon in a white rounded box
-                Container(
-                  width: 72, height: 72,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.lock_reset_rounded,
-                    color: Color(0xFF0057D9),
-                    size: 36,
-                  ),
-                ),
                 const SizedBox(height: 16),
                 const Text(
                   "Reset Password",
@@ -268,9 +249,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  FORM STATE
-  // ─────────────────────────────────────────────
   Widget _buildFormState() {
     final bool hasError = _emailError != null && _emailTouched;
     final bool isValid = _emailError == null &&
@@ -280,7 +258,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Title
+    
         const Text(
           "Forgot Password?",
           style: TextStyle(
@@ -297,7 +275,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
 
         const SizedBox(height: 28),
 
-        // ── INFO BANNER ──
+  
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -328,7 +306,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
 
         const SizedBox(height: 22),
 
-        // ── EMAIL LABEL ──
+
         const Text(
           "Email Address",
           style: TextStyle(
@@ -339,7 +317,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
         ),
         const SizedBox(height: 6),
 
-        // ── EMAIL FIELD ──
+  
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
@@ -384,7 +362,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
           ),
         ),
 
-        // ── INLINE ERROR ──
+      
         if (hasError)
           Padding(
             padding: const EdgeInsets.only(top: 6, left: 4),
@@ -404,12 +382,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
 
         const SizedBox(height: 28),
 
-        // ── SEND BUTTON ──
+        
         _buildSendButton(),
 
         const SizedBox(height: 20),
 
-        // ── BACK TO LOGIN ──
+
         Center(
           child: GestureDetector(
             onTap: () => Navigator.pop(context),
@@ -435,9 +413,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  SUCCESS STATE
-  // ─────────────────────────────────────────────
   Widget _buildSuccessState() {
     return Column(
       children: [
@@ -456,7 +431,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
         ),
         const SizedBox(height: 20),
         const Text(
-          "Email Sent! 🎉",
+          "Email Sent! Check Your Inbox",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -505,9 +480,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  SEND BUTTON
-  // ─────────────────────────────────────────────
   Widget _buildSendButton() {
     return Container(
       width: double.infinity,

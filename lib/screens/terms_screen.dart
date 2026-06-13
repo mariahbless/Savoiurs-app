@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'loan_application_screen.dart'; // ← change this import
+import 'loan_application_screen.dart'; 
 
 class TermsAndConditionsScreen extends StatelessWidget {
   const TermsAndConditionsScreen({super.key});
@@ -101,7 +101,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // ACCEPT BUTTON — now goes to LoanApplicationScreen ✅
+        
             SizedBox(
               width: double.infinity,
               height: 55,
@@ -110,7 +110,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const LoanApplicationScreen(), // ← changed
+                      builder: (_) => const LoanApplicationScreen(), 
                     ),
                   );
                 },

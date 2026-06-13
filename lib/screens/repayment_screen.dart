@@ -72,7 +72,7 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
           ],
         ),
       );
-      Navigator.pop(context); // Go back to loan detail
+      Navigator.pop(context); 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -97,7 +97,7 @@ class _RepaymentScreenState extends State<RepaymentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top illustration
+        
               Center(
                 child: Container(
                   width: 90,

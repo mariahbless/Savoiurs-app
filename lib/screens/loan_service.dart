@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants.dart';
 
 class LoanService {
-  static const String baseUrl = 'http://127.0.0.1:8000/api';
+  static String get baseUrl => AppConstants.apiBaseUrl;
+
+  static String get createLoanUrl => '$baseUrl/loans';
 
   static Future<Map<String, String>> _authHeaders() async {
     final prefs = await SharedPreferences.getInstance();
@@ -15,7 +18,7 @@ class LoanService {
     };
   }
 
-  // ─── GET ALL LOANS FOR LOGGED-IN USER ─────────────────────────────────────
+ 
   static Future<List<dynamic>> getLoans() async {
     final headers = await _authHeaders();
     final response = await http.get(
@@ -29,7 +32,7 @@ class LoanService {
     throw Exception('Failed to load loans: ${response.statusCode}');
   }
 
-  // ─── GET SINGLE LOAN ──────────────────────────────────────────────────────
+ 
   static Future<Map<String, dynamic>> getLoan(int id) async {
     final headers = await _authHeaders();
     final response = await http.get(
@@ -43,8 +46,7 @@ class LoanService {
     throw Exception('Failed to load loan: ${response.statusCode}');
   }
 
-  // ─── UPDATE LOAN (only allowed when status == pending) ───────────────────
-  // Fields: amount, description, collateral
+  
   static Future<Map<String, dynamic>> updateLoan(
       int id, Map<String, dynamic> fields) async {
     final headers = await _authHeaders();
@@ -62,8 +64,6 @@ class LoanService {
       'message': data['message'] ?? 'Update failed.'
     };
   }
-
-  // MAKE REPAYMENT 
   static Future<Map<String, dynamic>> makeRepayment(
       int loanId, double amount, String paymentMethod) async {
     final headers = await _authHeaders();
@@ -85,7 +85,6 @@ class LoanService {
     };
   }
 
-  //GET REPAYMENTS FOR A LOAN 
   static Future<List<dynamic>> getRepayments(int loanId) async {
     final headers = await _authHeaders();
     final response = await http.get(

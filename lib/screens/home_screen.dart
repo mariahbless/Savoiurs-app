@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     {"img": "assets/why1.jpg", "text": "Fast Loan Approval", "icon": "⚡"},
     {"img": "assets/why2.jpg", "text": "Low Interest Rates", "icon": "📉"},
     {"img": "assets/why3.jpg", "text": "Secure Transactions", "icon": "🔒"},
-    {"img": "assets/why4.jpg", "text": "24/7 Customer Support", "icon": "🎧"},
+    {"img": "assets/why4.jpg", "text": "24/7 Customer Support", "icon": "📞"},
   ];
 
   final List<Map<String, dynamic>> loanTypes = [
@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ─────────────── HERO HEADER ───────────────
+          
               _buildHeroHeader(),
 
               const SizedBox(height: 24),
@@ -90,38 +90,38 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ─────────────── STATS ROW ───────────────
+                  
                     _buildStatsRow(),
 
                     const SizedBox(height: 28),
 
-                    // ─────────────── LOAN TYPES ───────────────
+                    
                     _buildSectionTitle("Loan Products"),
                     const SizedBox(height: 14),
                     _buildLoanTypes(),
 
                     const SizedBox(height: 28),
 
-                    // ─────────────── APPLY CARD ───────────────
+            
                     _buildApplyCard(),
 
                     const SizedBox(height: 28),
 
-                    // ─────────────── WHY CHOOSE US ───────────────
+                
                     _buildSectionTitle("Why Choose Us"),
                     const SizedBox(height: 14),
                     _buildWhySlider(),
 
                     const SizedBox(height: 28),
 
-                    // ─────────────── HOW IT WORKS ───────────────
+              
                     _buildSectionTitle("How It Works"),
                     const SizedBox(height: 14),
                     _buildHowItWorks(),
 
                     const SizedBox(height: 28),
 
-                    // ─────────────── TESTIMONIAL ───────────────
+                  
                     _buildTestimonial(),
 
                     const SizedBox(height: 30),
@@ -153,20 +153,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row
+    
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  // Text(
-                  //   "Good Morning 👋",
-                  //   style: TextStyle(
-                  //     color: Colors.white70,
-                  //     fontSize: 14,
-                  //   ),
-                  // ),
+                  
                   SizedBox(height: 2),
                   Text(
                     "Savours Finance",
@@ -193,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
           const SizedBox(height: 24),
 
-          // Loan limit badge
+        
           AnimatedBuilder(
             animation: _pulseAnimation,
             builder: (context, child) => Transform.scale(
@@ -245,15 +239,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
           const SizedBox(height: 16),
 
-          // tagline
+  
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _heroChip("⚡ Fast"),
+              _heroChip(" Fast"),
               const SizedBox(width: 10),
-              _heroChip("🔒 Secure"),
+              _heroChip(" Secure"),
               const SizedBox(width: 10),
-              _heroChip("✅ Reliable"),
+              _heroChip(" Reliable"),
             ],
           ),
         ],
@@ -468,9 +462,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  WHY CHOOSE US SLIDER
-  // ─────────────────────────────────────────────
   Widget _buildWhySlider() {
     return Column(
       children: [
@@ -490,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
         const SizedBox(height: 12),
-        // Dot indicators
+      
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(whyChooseData.length, (index) {
@@ -512,9 +503,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  HOW IT WORKS
-  // ─────────────────────────────────────────────
   Widget _buildHowItWorks() {
     final steps = [
       {"step": "1", "title": "Register", "desc": "Create your account in minutes", "icon": Icons.person_add_rounded},
@@ -532,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Timeline
+        
             Column(
               children: [
                 Container(
@@ -592,9 +580,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  TESTIMONIAL
-  // ─────────────────────────────────────────────
   Widget _buildTestimonial() {
     return Container(
       width: double.infinity,
@@ -632,7 +617,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: const Color(0xFF0A84FF).withOpacity(0.2),
-                child: const Text("AK",
+                child: const Text("KD",
                     style: TextStyle(
                         color: Color(0xFF0A84FF),
                         fontWeight: FontWeight.bold)),
@@ -641,7 +626,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text("Akello Sarah",
+                  Text("Karungi Dorcus",
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -717,200 +702,4 @@ Widget buildWhyChooseItem(String image, String text, String emoji) {
     ),
   );
 }
-
-// import 'dart:async';
-// import 'package:flutter/material.dart';
-// //import 'signin_screen.dart';
-
-// class HomeScreen extends StatefulWidget {
-//   const HomeScreen({super.key});
-
-//   @override
-//   State<HomeScreen> createState() => _HomeScreenState();
-// }
-
-// class _HomeScreenState extends State<HomeScreen> {
-//   final PageController _whyController = PageController();
-//   int currentPage = 0;
-
-//   final List<Map<String, String>> whyChooseData = [
-//     {"img": "assets/why1.jpg", "text": "Fast Loan Approval"},
-//     {"img": "assets/why2.jpg", "text": "Low Interest Rates"},
-//     {"img": "assets/why3.jpg", "text": "Secure Transactions"},
-//     {"img": "assets/why4.jpg", "text": "24/7 Customer Support"},
-//   ];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     startAutoSlide();
-//   }
-
-//   void startAutoSlide() {
-//     Timer.periodic(const Duration(seconds: 2), (timer) {
-//       if (_whyController.hasClients) {
-//         currentPage++;
-//         if (currentPage == whyChooseData.length) currentPage = 0;
-
-//         _whyController.animateToPage(
-//           currentPage,
-//           duration: const Duration(milliseconds: 500),
-//           curve: Curves.easeInOut,
-//         );
-//       }
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: SafeArea(
-//         child: SingleChildScrollView(
-//           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-
-
-//               // ---------------- LOAN CARD ----------------
-//               Container(
-//                 width: double.infinity,
-//                 padding: const EdgeInsets.all(25),
-//                 decoration: BoxDecoration(
-//                   color: Colors.blue[50],
-//                   borderRadius: BorderRadius.circular(18),
-//                   boxShadow: const [
-//                     BoxShadow(
-//                       color: Colors.black12,
-//                       blurRadius: 8,
-//                       offset: Offset(0, 3),
-//                     ),
-//                   ],
-//                 ),
-//                 child: Column(
-//                   children: [
-//                     Text(
-//                       "Loan Limit",
-//                       style: TextStyle(
-//                         fontSize: 22,
-//                         fontWeight: FontWeight.bold,
-//                         color: Colors.blue[900],
-//                       ),
-//                     ),
-//                     const SizedBox(height: 12),
-//                     Text(
-//                       "Min: 2M  •  Max: 100M",
-//                       style: TextStyle(
-//                         fontSize: 18,
-//                         color: Colors.blue[800],
-//                       ),
-//                     ),
-//                     const SizedBox(height: 15),
-//                     Container(
-//                       height: 1,
-//                       width: 120,
-//                       color: Colors.blue[200],
-//                     ),
-//                     const SizedBox(height: 12),
-//                     Text(
-//                       "Flexible loans tailored to your needs.",
-//                       style: TextStyle(
-//                         fontSize: 14,
-//                         color: Colors.grey[700],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-
-//               const SizedBox(height: 25),
-
-//               Text(
-//                 "Secure • Fast • Reliable",
-//                 style: TextStyle(
-//                   fontSize: 16,
-//                   color: const Color.fromARGB(255, 15, 0, 0),
-//                   fontStyle: FontStyle.italic,
-//                 ),
-//               ),
-
-//               const SizedBox(height: 30),
-
-//               // ---------------- WHY CHOOSE US ----------------
-//               Align(
-//                 alignment: Alignment.centerLeft,
-//                 child: Text(
-//                   "Why Choose Us",
-//                   style: TextStyle(
-//                     fontSize: 24,
-//                     fontWeight: FontWeight.bold,
-//                     color: Colors.blue[700],
-//                   ),
-//                 ),
-//               ),
-
-//               const SizedBox(height: 18),
-
-//               SizedBox(
-//                 height: 170,
-//                 child: PageView.builder(
-//                   controller: _whyController,
-//                   itemCount: whyChooseData.length,
-//                   itemBuilder: (context, index) {
-//                     return buildWhyChooseItem(
-//                       whyChooseData[index]["img"]!,
-//                       whyChooseData[index]["text"]!,
-//                     );
-//                   },
-//                 ),
-//               ),
-
-//               const SizedBox(height: 18),
-
-              
-
-//               const SizedBox(height: 30),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// // ------------------ HELPER WIDGET --------------------
-// Widget buildWhyChooseItem(String image, String text) {
-//   return Stack(
-//     children: [
-//       Container(
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(14),
-//           image: DecorationImage(
-//             image: AssetImage(image),
-//             fit: BoxFit.cover,
-//           ),
-//         ),
-//       ),
-//       Container(
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(14),
-//           color: Colors.black.withOpacity(0.45),
-//         ),
-//       ),
-//       Center(
-//         child: Text(
-//           text,
-//           textAlign: TextAlign.center,
-//           style: const TextStyle(
-//             fontSize: 22,
-//             fontWeight: FontWeight.bold,
-//             color: Colors.white,
-//           ),
-//         ),
-//       ),
-//     ],
-//   );
-// }
-
 
